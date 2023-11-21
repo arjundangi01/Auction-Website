@@ -27,8 +27,8 @@ const Home = () => {
           </h1>
         </div>
         <div className=" mt-5 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((item) => (
-            <Card />
+          {[{_id:1},{_id:2},{_id:3}].map((item) => (
+            <Card key={item._id} {...item} />
           ))}
         </div>
         <div className="mt-10">

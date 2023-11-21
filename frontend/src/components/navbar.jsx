@@ -74,14 +74,9 @@ const Navbar = () => {
                 >
                   Home
                 </Link>
-                <Link
-                  href="#"
-                  className=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                >
-                  Buy
-                </Link>
-                <Link
-                  href="#"
+                
+                <Link 
+                  to='/sell'
                   className=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                 >
                   Sell
