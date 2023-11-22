@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../../index.css";
 import Card from "./components/card";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { onGetAllProducts } from "../../redux/product/product.action";
 const Home = () => {
+  const dispatch = useDispatch();
   // --`
-  
+  const {allProducts} = useSelector((store)=>store.productReducer)
+  useEffect(() => {
+    dispatch(onGetAllProducts())
+  },[])
   return (
     <main>
       <section id="1">
@@ -28,7 +35,7 @@ const Home = () => {
           </h1>
         </div>
         <div className=" mt-5 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-          {[{_id:1},{_id:2},{_id:3}].map((item) => (
+          {allProducts?.map((item) => (
             <Card key={item._id} {...item} />
           ))}
         </div>

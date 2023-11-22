@@ -3,17 +3,18 @@ const authentication = require("../middlewares/authentication.middleware");
 const ProductModel = require("../models/product.model");
 const productRouter = express.Router();
 
-productRouter.get('/all', authentication, async (req, res) => {
+productRouter.get('/all',  async (req, res) => {
    
     try {
         const allProduct = await ProductModel.find({});
+        // console.log(allProduct)
         res.send(allProduct)
     } catch (error) {
         console.log(error)
         res.send({message:'internal error'})
     }
 })
-productRouter.get('/single/:id', authentication, async (req, res) => {
+productRouter.get('/single/:id',  async (req, res) => {
    const {id }= req.params
     try {
         const product = await ProductModel.findOne({_id:id});
