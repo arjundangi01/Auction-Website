@@ -1,13 +1,29 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Drawer = ({
   showDrawer,
   setShowDrawer,
-  itemImage,
-  itemName,
   bidAmount,
+  _id,productName,startBid,latestBid,startDate,endDate,description,productImage
 }) => {
   // const { itemImage, itemName } = item;
+  const {loginUserDetail} = useSelector((store)=> store.userReducer)
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    let newObj = {
+      createdBy:loginUserDetail?._id,
+      bidAmount,
+      productId:_id
+    }
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/bids/add`,newObj)
+     console.log(response)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <div
       class="relative z-10"
@@ -15,16 +31,7 @@ const Drawer = ({
       role="dialog"
       aria-modal="true"
     >
-      {/* <!--
-    Background backdrop, show/hide based on slide-over state.
-
-    Entering: "ease-in-out duration-500"
-      From: "opacity-0"
-      To: "opacity-100"
-    Leaving: "ease-in-out duration-500"
-      From: "opacity-100"
-      To: "opacity-0"
-  --> */}
+   
       {showDrawer && (
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
       )}
@@ -74,12 +81,12 @@ const Drawer = ({
                       <div className="w-[200px]  ">
                         <img
                           className="w-[100%] rounded-2xl"
-                          src={itemImage}
+                          src={productImage}
                           alt=""
                         />
                       </div>
                       <div>
-                        <p className="text-blue-600 font-bold"> {itemName} </p>
+                        <p className="text-blue-600 font-bold"> {productName} </p>
                         <p> Bid Amount : ₹ {bidAmount} </p>
                       </div>
                     </div>
@@ -130,7 +137,7 @@ const Drawer = ({
                     </div>
                   </div>
                   <div className="px-2">
-                    <button className="bg-blue-600 w-full text-white py-2 rounded-2xl">
+                    <button onClick={onSubmit} className="bg-blue-600 w-full text-white py-2 rounded-2xl">
                       {" "}
                       Submit
                     </button>
