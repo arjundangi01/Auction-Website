@@ -3,6 +3,7 @@ import "../../index.css";
 import Card from "./components/card";
 const Home = () => {
   // --`
+  
   return (
     <main>
       <section id="1">

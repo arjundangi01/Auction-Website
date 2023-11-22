@@ -3,6 +3,7 @@ const express = require("express");
 const http = require("http");
 const cors = require("cors");
 const userRouter = require("./routes/user.routes");
+const productRouter = require("./routes/product.routes");
 require("dotenv").config();
 
 const app = express();
@@ -19,6 +20,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/users", userRouter);
+app.use("/products", productRouter);
 
 app.listen(PORT, async () => {
   try {

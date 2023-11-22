@@ -79,7 +79,8 @@ const Navbar = () => {
                 </Link>
 
                 <Link
-                  to={ isAuth ? "/sell" :'signup' }
+                  // to={ isAuth ? "/sell" :'signup' }
+                  to='/sell'
                   className=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                 >
                   Sell
