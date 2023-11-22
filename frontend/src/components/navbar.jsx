@@ -1,7 +1,18 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { getUserDetailAction } from "../redux/user/user.action";
 const Navbar = () => {
   const [profileDropdown, setProfileDropdown] = useState(false);
+  const [mobileMenu, SetmobileMenu] = useState(false);
+  const navigate = useNavigate()
+  const { isAuth ,loginUserDetail} = useSelector((store) => store.userReducer);
+  const dispatch = useDispatch()
+  // console.log(loginUserDetail)
+  useEffect(() => {
+    dispatch(getUserDetailAction());
+  },[isAuth])
+
   return (
     <nav className="">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -16,11 +27,7 @@ const Navbar = () => {
             >
               <span className="absolute -inset-0.5"></span>
               <span className="sr-only">Open main menu</span>
-              {/* <!--
-            Icon when menu is closed.
 
-            Menu open: "hidden", Menu closed: "block"
-          --> */}
               <svg
                 className="block h-6 w-6"
                 fill="none"
@@ -35,11 +42,7 @@ const Navbar = () => {
                   d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
                 />
               </svg>
-              {/* <!--
-            Icon when menu is open.
 
-            Menu open: "block", Menu closed: "hidden"
-          --> */}
               <svg
                 className="hidden h-6 w-6"
                 fill="none"
@@ -68,15 +71,15 @@ const Navbar = () => {
               <div className="flex space-x-4">
                 {/* <!-- Current: "bg-gray-900 text-white", Default: " hover:bg-gray-700 hover:text-white" --> */}
                 <Link
-                  to='/'
+                  to="/"
                   className="hover:bg-gray-700 hover:text-white  rounded-md px-3 py-2 text-sm font-medium"
                   aria-current="page"
                 >
                   Home
                 </Link>
-                
-                <Link 
-                  to='/sell'
+
+                <Link
+                  to={ isAuth ? "/sell" :'signup' }
                   className=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                 >
                   Sell
@@ -88,34 +91,32 @@ const Navbar = () => {
             {/* <!-- Profile dropdown --> */}
             <div className="relative ml-3">
               <div>
-                <button
-                  type="button"
-                  className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                  id="user-menu-button"
-                  aria-expanded="false"
-                  aria-haspopup="true"
-                  onClick={() => setProfileDropdown(!profileDropdown)}
-                >
-                  <span className="absolute -inset-1.5"></span>
-                  <span className="sr-only">Open user menu</span>
-                  <img
-                    className="h-8 w-8 rounded-full"
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    alt=""
-                  />
-                </button>
+                {isAuth ? (
+                  <button
+                    type="button"
+                    className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                    id="user-menu-button"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    onClick={() => setProfileDropdown(!profileDropdown)}
+                  >
+                    <span className="absolute -inset-1.5"></span>
+                    <span className="sr-only">Open user menu</span>
+                    <img
+                      className="h-8 w-8 rounded-full"
+                      src={loginUserDetail?.profileImage}
+                      alt=""
+                    />
+                  </button>
+                ) : (
+                    <button onClick={() => {
+                      navigate('/signup')
+                  }} className="bg-indigo-500 text-white py-2 px-5 rounded-xl ">
+                    Get start
+                  </button>
+                )}
               </div>
 
-              {/* <!--
-            Dropdown menu, show/hide based on menu state.
-
-            Entering: "transition ease-out duration-100"
-              From: "transform opacity-0 scale-95"
-              To: "transform opacity-100 scale-100"
-            Leaving: "transition ease-in duration-75"
-              From: "transform opacity-100 scale-100"
-              To: "transform opacity-0 scale-95"
-          --> */}
               {profileDropdown && (
                 <div
                   className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
@@ -142,15 +143,14 @@ const Navbar = () => {
                   >
                     Settings
                   </Link>
-                  <a
-                    href="#"
+                  <Link
                     className="block px-4 py-2 text-sm text-gray-700"
                     role="menuitem"
                     tabindex="-1"
                     id="user-menu-item-2"
                   >
                     Sign out
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
@@ -160,34 +160,20 @@ const Navbar = () => {
 
       {/* <!-- Mobile menu, show/hide based on menu state. --> */}
       <div className="sm:hidden" id="mobile-menu">
-        <div className="space-y-1 px-2 pb-3 pt-2">
-          {/* Current: "bg-gray-900 text-white", Default: " hover:bg-gray-700 hover:text-white"  */}
-          <a
-            href="#"
-            className="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium"
-            aria-current="page"
-          >
-            Dashboard
-          </a>
-          <a
-            href="#"
-            className=" hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-          >
-            Team
-          </a>
-          <a
-            href="#"
-            className=" hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-          >
-            Projects
-          </a>
-          <a
-            href="#"
-            className=" hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-          >
-            Calendar
-          </a>
-        </div>
+        {mobileMenu && (
+          <div className="space-y-1 px-2 pb-3 pt-2">
+            {/* Current: "bg-gray-900 text-white", Default: " hover:bg-gray-700 hover:text-white"  */}
+            <Link
+              className="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium"
+              aria-current="page"
+            >
+              Home
+            </Link>
+            <Link className=" hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">
+              Sell
+            </Link>
+          </div>
+        )}
       </div>
     </nav>
   );

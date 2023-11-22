@@ -1,6 +1,11 @@
 import React from "react";
+import { useSelector } from "react-redux";
+
 
 const Sell = () => {
+  const { isAuth } = useSelector((store) => store.userReducer);
+  // const navigate = useNavigate();
+
   return (
     <main className="w-[70%] m-auto">
       <form>

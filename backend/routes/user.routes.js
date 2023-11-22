@@ -17,29 +17,32 @@ userRouter.get("/login_user",authentication,  async (req, res) => {
 });
 
 userRouter.post("/signup", async (req, res) => {
-  const { userName, password } = req.body;
+  const { userName, email, password } = req.body;
+  console.log(req.body)
   try {
-    const existingUser = await UserModel.findOne({ userName });
+    const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
       res.send({ message: "User already registered" });
     } else {
       bcrypt.hash(password, 2, async function (err, hash) {
-        const newUser = await UserModel.create({ userName, password: hash });
+        const newUser = await UserModel.create({ userName,email, password: hash });
         // console.log(newUser)
         let token = jwt.sign({ userId: newUser._id }, "json_secret");
         res.send({ message: "User registered successful", token });
       });
     }
   } catch (error) {
+    res.send({ message: "Internal Error" });
+
     console.log(error);
   }
 });
 
 userRouter.post("/login", async (req, res) => {
-  const { userName, password } = req.body;
+  const { email, password } = req.body;
  
   try {
-    const existingUser = await UserModel.findOne({ userName });
+    const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
       bcrypt.compare(password, existingUser.password, function (err, result) {
         // result == true
@@ -54,6 +57,8 @@ userRouter.post("/login", async (req, res) => {
       res.send({ message: "User not registered" });
     }
   } catch (error) {
+    res.send({ message: "Internal Error" });
+
     console.log(error);
   }
 });
