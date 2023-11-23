@@ -4,34 +4,50 @@ import Card from "./components/card";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { onGetAllProducts } from "../../redux/product/product.action";
+import SearchCard from "./components/search_card";
 const Home = () => {
   const dispatch = useDispatch();
   const searchRef = useRef("");
+  const [search, setSearch] = useState(false);
+  const [timerId, setTimerId] = useState("");
+  const [allSearches, setAllSearches] = useState([]);
   // const timerId = useRef("");
   // --`
   const { allProducts } = useSelector((store) => store.productReducer);
   useEffect(() => {
     dispatch(onGetAllProducts());
   }, []);
-  let timerId;
+
   const handleChange = async () => {
     try {
       if (timerId) {
         clearTimeout(timerId);
       }
-      timerId = setTimeout(() => {
-        // console.log(searchRef.current?.value);
-        getProduct()
-      }, 500);
+      setTimerId(
+        setTimeout(() => {
+          setSearch(true);
+          if (!searchRef.current?.value) {
+            setSearch(false);
+          }
+          // console.log(searchRef.current?.value);
+          getProduct();
+        }, 1000)
+      );
     } catch (error) {}
   };
   const getProduct = async () => {
-    
+  try {
+    const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/products/all/?q=${searchRef.current?.value}`);
+    // console.log(response)
+    setAllSearches(response.data)
+  } catch (error) {
+    console.log(error)
   }
+  };
   return (
     <main>
-      <section id="1">
-        <div className="flex flex-col items-center  justify-center gap-y-4 w-[50%] m-auto  text-center">
+      <section id="1" className="h-[60vh]">
+        <div className="flex flex-col items-center  justify-center gap-y-4 w-[50%] m-auto   text-center">
           <h1 className="text-[3.5rem] font-bold text-blue-600">
             Join Exclusive Auction & Get The Finest.
           </h1>
@@ -46,11 +62,16 @@ const Home = () => {
               />
               <button className="bg-[#90e0ef] rounded-xl px-3  ">Search</button>
             </div>
-            <div className={` ${searchRef.current?.value ? 'visible':'hidden'  }  absolute  left-0 top-[55px] bg-white w-full rounded-xl border py-2`}>
-              <h1>hiiiiiiii</h1>
-              <h1>hiiiiiii2</h1>
-              <h1>hiiiiiii2</h1>
-              <h1>hiiiiiii2</h1>
+            <div
+              className={` ${
+                search ? "visible" : "hidden"
+              }  absolute  left-0 top-[55px] bg-white w-full rounded-xl border py-2`}
+            >
+              {
+                allSearches.map((ele) => (
+                  <SearchCard key={ele._id} {...ele} />
+                ))
+             }
             </div>
           </div>
         </div>

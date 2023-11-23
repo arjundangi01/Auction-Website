@@ -1,5 +1,6 @@
 const express = require("express");
 const BidModel = require("../models/bid.model");
+const ProductModel = require("../models/product.model");
 const bidRouter = express.Router();
 
 bidRouter.post("/add", async (req, res) => {
@@ -7,6 +8,7 @@ bidRouter.post("/add", async (req, res) => {
 
   try {
     const newBid = await BidModel.create(input);
+    
     res.send({ message: "new bid added" });
   } catch (error) {
     console.log(error);

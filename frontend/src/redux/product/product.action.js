@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { getAllBidsAction } from "../bids/bid.action";
 
 export const GET_ALL_PRODUCT_SUCCESS = "GET_ALL_PRODUCT_SUCCESS";
 
@@ -14,7 +15,7 @@ export const onGetAllProducts = () => async (dispatch) => {
     console.log(error);
   }
 };
-export const onAddNewProduct = (newObj) => async (dispatch) => {
+export const onAddNewProduct = (newObj,navigate) => async (dispatch) => {
   const userToken = Cookies.get("auction_token");
   if (!userToken) {
     return;
@@ -30,7 +31,8 @@ export const onAddNewProduct = (newObj) => async (dispatch) => {
         },
       }
     );
-    console.log(response);
+    navigate('/')
+    // console.log(response);
   } catch (error) {
     console.log(error);
   }
@@ -38,6 +40,7 @@ export const onAddNewProduct = (newObj) => async (dispatch) => {
 export const onAddNewBid = (newObj) => async (dispatch) => {
   const userToken = Cookies.get("auction_token");
   if (!userToken) {
+    // console.log('in')
     return;
   }
 
@@ -51,7 +54,8 @@ export const onAddNewBid = (newObj) => async (dispatch) => {
         },
       }
     );
-    console.log(response);
+    // console.log('th', response);
+    dispatch(getAllBidsAction(newObj?.productId));
   } catch (error) {
     console.log(error);
   }

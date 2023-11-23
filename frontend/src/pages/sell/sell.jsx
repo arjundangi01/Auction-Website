@@ -28,7 +28,7 @@ const Sell = () => {
     const imageRef = storage
       .ref(`/images/${image?.name}`)
       .put(image)
-      .on("state_changed", () => {
+      .on("state_changed",  () => {
         storage
           .ref("images")
           .child(image?.name)
@@ -49,7 +49,7 @@ const Sell = () => {
       description: descRef.current?.value,
       productImage: imageUrl,
     };
-    dispatch(onAddNewProduct(newObj));
+    dispatch(onAddNewProduct(newObj,navigate));
   };
   return (
     <main className="w-[70%] m-auto">

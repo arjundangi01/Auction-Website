@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { getUserDetailAction } from "../redux/user/user.action";
+import { getUserDetailAction, onUserLogoutAction } from "../redux/user/user.action";
 const Navbar = () => {
   const [profileDropdown, setProfileDropdown] = useState(false);
   const [mobileMenu, SetmobileMenu] = useState(false);
@@ -11,7 +11,13 @@ const Navbar = () => {
   // console.log(loginUserDetail)
   useEffect(() => {
     dispatch(getUserDetailAction());
-  },[isAuth])
+  }, [isAuth])
+  
+  const onLogout = (e) => {
+    e.preventDefault()
+    setProfileDropdown(false)
+    dispatch(onUserLogoutAction());
+  }
 
   return (
     <nav className="">
@@ -145,6 +151,7 @@ const Navbar = () => {
                     Settings
                   </Link>
                   <Link
+                    onClick={onLogout}
                     className="block px-4 py-2 text-sm text-gray-700"
                     role="menuitem"
                     tabindex="-1"

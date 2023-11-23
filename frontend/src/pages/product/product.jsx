@@ -4,17 +4,21 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import About from "./components/about";
 import Bids from "./components/bids";
+import { useSelector } from "react-redux";
 
 const Product = () => {
   const [showDrawer, setShowDrawer] = useState(false);
   const [bidAmount, setBidAmount] = useState(0);
   const [product, setProduct] = useState({});
-  const [owner, setOwner] = useState({});
+  const [owner, setOwner] = useState(null);
+  const [highestBid, setHighestBid] = useState(0);
   const [tab, setTabs] = useState("about");
   const { id } = useParams();
   useEffect(() => {
     getProduct();
   }, []);
+
+  const { loginUserDetail } = useSelector((store) => store.userReducer);
 
   const getProduct = async () => {
     // console.log(id)
@@ -22,9 +26,12 @@ const Product = () => {
       const response = await axios.get(
         `${process.env.REACT_APP_BASE_URL}/products/single/${id}`
       );
-      console.log(response);
+      // console.log(response);
       setProduct(response.data.product);
-      setOwner(response.data.owner)
+      setOwner(response.data.owner);
+      if (response.data.highestBid) {
+        setHighestBid(response.data.highestBid);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -36,7 +43,7 @@ const Product = () => {
         <div className="flex gap-10">
           <div className="w-[70%]">
             <img
-              className="rounded-3xl w-[100%] max-h-[500px]"
+              className="rounded-3xl w-[100%] max-h-[500px] min-h-[500px] object-cover"
               src={product?.productImage}
               alt=""
             />
@@ -49,27 +56,50 @@ const Product = () => {
                 <p>₹ {product?.startBid}</p>
               </div>
               <div className="flex justify-between border-b-[1px] border-black py-2 ">
-                <p>Latest Bid</p>
-                <p>₹ {product?.latestBid}</p>
+                <p>highestBid Bid</p>
+                {highestBid ? <p>₹ {highestBid}</p> : <p>-</p>}
               </div>
               <div className="flex justify-between border-b-[1px] border-black py-2">
                 <p>Total Bids</p>
                 <p>{}</p>
               </div>
             </div>
-            <div className="flex justify-between">
-              <input
-                onChange={(e)=>setBidAmount(e.target.value)}
-                type="text"
-                placeholder="Enter Amount"
-                className="outline-none bg-transparent border-b-[1px] border-black"
-              />
-              <button
-                onClick={() => setShowDrawer(!showDrawer)}
-                className="bg-blue-600 text-white px-5 py-2 rounded-lg "
-              >
-                Bid Now
-              </button>
+            <div className="flex justify-between ">
+              {product?.purchaseBy ? (
+                product?.purchaseBy == "Expire" ? (
+                  <>
+                    <p className="text-[1.2rem] text-[red]  ">Expired</p>
+                    <p> 'Auction Expired No one placed Bid' </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-[1.2rem] text-[red]  ">Expired</p>
+                    <p className="text-[1.2rem]  ">
+                      Sold to {product?.purchaseByName}{" "}
+                    </p>
+                  </>
+                )
+              ) : loginUserDetail?._id == owner?._id ? (
+                <p className="text-[1.2rem] text-[red] text-center ">
+                  This product is listed by You
+                </p>
+              ) : (
+                <>
+                  {" "}
+                  <input
+                    onChange={(e) => setBidAmount(e.target.value)}
+                    type="text"
+                    placeholder="Enter Amount"
+                    className="outline-none bg-transparent border-b-[1px] border-black"
+                  />
+                  <button
+                    onClick={() => setShowDrawer(!showDrawer)}
+                    className="bg-blue-600 text-white px-5 py-2 rounded-lg "
+                  >
+                    Bid Now
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -78,7 +108,7 @@ const Product = () => {
           <div className="  w-[80%] m-auto">
             <div className="flex justify-around">
               <div
-                onClick={()=>setTabs('about')}
+                onClick={() => setTabs("about")}
                 className={` ${tab == "about" ? "bg-blue-600" : "bg-white"} ${
                   tab == "about" ? "text-white" : "text-black"
                 } rounded-lg px-20 py-3 cursor-pointer ${
@@ -89,7 +119,7 @@ const Product = () => {
                 About{" "}
               </div>
               <div
-                onClick={()=>setTabs('bids')}
+                onClick={() => setTabs("bids")}
                 className={` ${tab == "bids" ? "bg-blue-600" : "bg-white"} ${
                   tab == "bids" ? "text-white" : "text-black"
                 } ${
@@ -100,7 +130,13 @@ const Product = () => {
                 All Bids{" "}
               </div>
             </div>
-            <div className="mt-5" >{tab == "about" ? <About {...product} {...owner}  /> : <Bids {...product} />}</div>
+            <div className="mt-5 max-h-[240px] min-h-[240px]  overflow-y-scroll ">
+              {tab == "about" ? (
+                <About {...product} {...owner} />
+              ) : (
+                <Bids {...product} />
+              )}
+            </div>
           </div>
         </div>
       </section>
@@ -110,6 +146,7 @@ const Product = () => {
         setShowDrawer={setShowDrawer}
         {...product}
         bidAmount={bidAmount}
+        highestBid={highestBid}
       />
     </main>
   );

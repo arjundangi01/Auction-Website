@@ -3,17 +3,18 @@ import {
   USER_DETAIL_REQUEST,
   USER_DETAIL_REQUEST_SUCCESS,
   USER_LOGIN_REQUEST_SUCCESS,
+  USER_LOGOUT_REQUEST_SUCCESS,
 } from "./user.action_type";
 import Cookies from "js-cookie";
 
 export const onUserLoginAction = (userObj,navigate,notifyError,notifySuccess) => async (dispatch) => {
-  console.log(userObj);
+  // console.log(userObj);
   try {
     const  {data}  = await axios.post(
       `${process.env.REACT_APP_BASE_URL}/users/login`,
       userObj
     );
-    console.log(data)
+    // console.log(data)
     if (data.message == "User not registered" || data.message=='Entered wrong details' || data.message == "Internal Error") {
       notifyError(data.message)
       return;
@@ -27,6 +28,12 @@ export const onUserLoginAction = (userObj,navigate,notifyError,notifySuccess) =>
     console.log(error);
   }
 };
+
+export const onUserLogoutAction = () => (dispatch) => {
+  Cookies.remove('auction_token');
+  dispatch({type:USER_LOGOUT_REQUEST_SUCCESS})
+}
+
 export const onUserSignupAction = (userObj,navigate,notifyError,notifySuccess) => async (dispatch) => {
   // console.log(userObj);
   try {
@@ -34,7 +41,7 @@ export const onUserSignupAction = (userObj,navigate,notifyError,notifySuccess) =
       `${process.env.REACT_APP_BASE_URL}/users/signup`,
       userObj
     );
-    console.log(data)
+    // console.log(data)
     if (data.message == "User already registered" || data.message == "Internal Error") {
       notifyError(data.message)
       return;
