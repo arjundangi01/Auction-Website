@@ -13,6 +13,17 @@ bidRouter.post("/add", async (req, res) => {
     res.send({ message: "internal error" });
   }
 });
+bidRouter.get("/all/:id", async (req, res) => {
+  const {id} = req.params;
+
+  try {
+    const allBid = await BidModel.find({productId:id},{}).sort({bidAmount:-1});
+    res.send(allBid);
+  } catch (error) {
+    console.log(error);
+    res.send({ message: "internal error" });
+  }
+});
 
 
 module.exports = bidRouter;

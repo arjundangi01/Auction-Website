@@ -13,7 +13,9 @@ const Drawer = ({
   const onSubmit = async (e) => {
     e.preventDefault();
     let newObj = {
-      createdBy:loginUserDetail?._id,
+      createdBy: loginUserDetail?._id,
+      userImage: loginUserDetail?.profileImage,
+      userName:loginUserDetail?.userName,
       bidAmount,
       productId:_id
     }

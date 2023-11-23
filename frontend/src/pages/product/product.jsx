@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import Drawer from "./components/drawer";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import About from "./components/about";
+import Bids from "./components/bids";
 
 const Product = () => {
   const [showDrawer, setShowDrawer] = useState(false);
   const [bidAmount, setBidAmount] = useState(0);
   const [product, setProduct] = useState({});
+  const [owner, setOwner] = useState({});
+  const [tab, setTabs] = useState("about");
   const { id } = useParams();
   useEffect(() => {
     getProduct();
@@ -19,14 +23,15 @@ const Product = () => {
         `${process.env.REACT_APP_BASE_URL}/products/single/${id}`
       );
       console.log(response);
-      setProduct(response.data);
+      setProduct(response.data.product);
+      setOwner(response.data.owner)
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <main className="mt-5">
+    <main className="mt-5 pb-[4rem]">
       <section className="w-[80%] m-auto">
         <div className="flex gap-10">
           <div className="w-[70%]">
@@ -54,6 +59,7 @@ const Product = () => {
             </div>
             <div className="flex justify-between">
               <input
+                onChange={(e)=>setBidAmount(e.target.value)}
                 type="text"
                 placeholder="Enter Amount"
                 className="outline-none bg-transparent border-b-[1px] border-black"
@@ -68,21 +74,33 @@ const Product = () => {
           </div>
         </div>
         {/* tabs div */}
-        <div className="border mt-8">
-          <div className=" border w-[80%] m-auto">
-            <div className="flex justify-between">
-              <div className="bg-blue-600 text-white rounded-lg px-20 py-3 cursor-pointer ">
+        <div className=" mt-8 bg-[#eff1f4] rounded-3xl py-5">
+          <div className="  w-[80%] m-auto">
+            <div className="flex justify-around">
+              <div
+                onClick={()=>setTabs('about')}
+                className={` ${tab == "about" ? "bg-blue-600" : "bg-white"} ${
+                  tab == "about" ? "text-white" : "text-black"
+                } rounded-lg px-20 py-3 cursor-pointer ${
+                  tab == "about" ? "border-[0px]" : "border-[1px]"
+                } border-black `}
+              >
                 {" "}
                 About{" "}
               </div>
-              <div className="bg-blue-600 text-white rounded-lg px-20 py-3 cursor-pointer  ">
+              <div
+                onClick={()=>setTabs('bids')}
+                className={` ${tab == "bids" ? "bg-blue-600" : "bg-white"} ${
+                  tab == "bids" ? "text-white" : "text-black"
+                } ${
+                  tab == "bids" ? "border-[0px]" : " border-[1px]"
+                } rounded-lg px-20 py-3 cursor-pointer border-black`}
+              >
                 {" "}
                 All Bids{" "}
               </div>
             </div>
-            <div>
-              
-            </div>
+            <div className="mt-5" >{tab == "about" ? <About {...product} {...owner}  /> : <Bids {...product} />}</div>
           </div>
         </div>
       </section>
