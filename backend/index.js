@@ -33,7 +33,7 @@ app.use("/sold", bidRouter);
 // const today = new Date().toISOString().split('T')[0];
 // console.log(today);
 cron.schedule(
-  "25 16 * * *",
+  "0 0 * * *",
   async () => {
     const today = new Date().toISOString().split("T")[0];
     let allProductsToUpdate = await ProductModel.find({ endDate: today });
