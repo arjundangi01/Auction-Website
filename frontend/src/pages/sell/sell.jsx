@@ -1,11 +1,11 @@
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { imageDB, storage } from "../../config/firebase";
 import { ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import { MdDeleteForever } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { onAddNewProduct } from "../../redux/product/product.action";
+import { uploadImage } from "../../config/firebase";
 const Sell = () => {
   const [imageUrl, setImageUrl] = useState("");
   const { isAuth } = useSelector((store) => store.userReducer);
@@ -15,33 +15,38 @@ const Sell = () => {
   const startBidRef = useRef("");
   const endDateRef = useRef("");
   const descRef = useRef("");
+  const [isAllFilled, setIsAllFilled] = useState(true);
 
   // const navigate = useNavigate();
   const handleImageChange = (e) => {
-    let image = e.target.files[0];
-    if (image == null) {
-      return;
-    }
-    // console.log(image)
-    // const imgRef = ref(imageDB, `files/${v4()}`);
-    // uploadBytes(imgRef,image)
-    const imageRef = storage
-      .ref(`/images/${image?.name}`)
-      .put(image)
-      .on("state_changed",  () => {
-        storage
-          .ref("images")
-          .child(image?.name)
-          .getDownloadURL()
-          .then((url) => {
-            setImageUrl(url);
-          });
+    // let image = e.target.files[0];
+    uploadImage(e.target.files[0])
+      .then((downloadURL) => {
+        setImageUrl(downloadURL);
+
+        // console.log(downloadURL);
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    imageRef();
+    // setImageUrl(url);
   };
   // console.log(imageUrl);
   const onSubmit = async (e) => {
     e.preventDefault();
+    if (
+      !productNameRef.current?.value ||
+      !startBidRef.current?.value ||
+      !endDateRef.current?.value ||
+      !descRef.current?.value ||
+      !imageUrl
+    ) {
+      setIsAllFilled(false);
+      
+      return;
+    }
+    setIsAllFilled(true);
+
     const newObj = {
       productName: productNameRef.current?.value,
       startBid: startBidRef.current?.value,
@@ -49,7 +54,8 @@ const Sell = () => {
       description: descRef.current?.value,
       productImage: imageUrl,
     };
-    dispatch(onAddNewProduct(newObj,navigate));
+
+    // dispatch(onAddNewProduct(newObj,navigate));
   };
   return (
     <main className="w-[70%] m-auto">
@@ -203,6 +209,11 @@ const Sell = () => {
                 </div>
               </div>
             </div>
+            {isAllFilled ? (
+              ""
+            ) : (
+              <p className="text-red-600">Please Fill All Detail</p>
+            )}
             <div className="flex justify-center mt-5">
               <button
                 onClick={onSubmit}

@@ -6,7 +6,8 @@ import { getAllBidsAction } from "../../../redux/bids/bid.action";
 
 const Bids = ({ _id }) => {
   const dispatch = useDispatch();
-   const {allBids} = useSelector((store)=>store.bidReducer)
+  const { allBids } = useSelector((store) => store.bidReducer)
+  console.log(allBids)
   useEffect(() => {
     // getBids();
     dispatch(getAllBidsAction(_id))

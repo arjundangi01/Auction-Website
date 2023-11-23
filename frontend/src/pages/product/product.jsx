@@ -5,18 +5,27 @@ import { useParams } from "react-router-dom";
 import About from "./components/about";
 import Bids from "./components/bids";
 import { useSelector } from "react-redux";
+import { calculateTimeRemaining } from "../../utils/date";
 
 const Product = () => {
   const [showDrawer, setShowDrawer] = useState(false);
   const [bidAmount, setBidAmount] = useState(0);
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState();
   const [owner, setOwner] = useState(null);
   const [highestBid, setHighestBid] = useState(0);
   const [tab, setTabs] = useState("about");
+  const [expireTime, setExpireTime] = useState();
+
   const { id } = useParams();
   useEffect(() => {
     getProduct();
   }, []);
+  useEffect(() => {
+    if (product?.endDate) {
+      setExpireTime(calculateTimeRemaining(product?.endDate) + 1);
+    }
+    // getProduct();
+  }, [product]);
 
   const { loginUserDetail } = useSelector((store) => store.userReducer);
 
@@ -41,7 +50,17 @@ const Product = () => {
     <main className="mt-5 pb-[4rem]">
       <section className="w-[80%] m-auto">
         <div className="flex gap-10">
-          <div className="w-[70%]">
+          <div className="w-[70%] relative">
+            {product?.purchaseBy ? (
+              <p className="absolute right-0 top-3 bg-green-200 text-[1.2rem] font-bold rounded-xl px-7 py-2 text-red-500">
+                sold
+              </p>
+            ) : (
+              <p className="absolute right-0 top-3 bg-green-200 text-[1.2rem] font-bold rounded-xl px-7 py-2 text-red-500">
+                {expireTime} Day Left
+              </p>
+            )}
+
             <img
               className="rounded-3xl w-[100%] max-h-[500px] min-h-[500px] object-cover"
               src={product?.productImage}

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllBidsAction } from "../../../redux/bids/bid.action";
 import { useNavigate } from "react-router-dom";
+import Svg from "../../../components/svg";
 
 const Drawer = ({
   showDrawer,
@@ -23,22 +24,29 @@ const Drawer = ({
   const navigate = useNavigate();
   const { loginUserDetail, isAuth } = useSelector((store) => store.userReducer);
   const [isGreaterAmount, setIsGreaterAmount] = useState(true);
+  const [isLoading, setIsloading] = useState(true);
+
   useEffect(() => {
-    console.log(bidAmount,highestBid,startBid)
+    console.log(bidAmount, highestBid, startBid);
     if (bidAmount > highestBid && bidAmount > startBid) {
-      setIsGreaterAmount(true)
+      setIsGreaterAmount(true);
     } else {
-      setIsGreaterAmount(false)
+      setIsGreaterAmount(false);
     }
-  },[bidAmount])
+  }, [bidAmount]);
+  const formatCardNumber = (value) => {
+    return value.replace(/\D/g, "").replace(/(\d{4})(?=\d)/g, "$1 ");
+  };
   const onSubmit = async (e) => {
+    e.preventDefault();
     if (!isGreaterAmount) {
       return;
     }
-    e.preventDefault();
+
     if (!isAuth) {
-      navigate('/login')
+      navigate("/login");
     }
+
     let newObj = {
       createdBy: loginUserDetail?._id,
       userImage: loginUserDetail?.profileImage,
@@ -47,15 +55,18 @@ const Drawer = ({
       productId: _id,
     };
     try {
+      setIsloading(true);
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/bids/add`,
         newObj
       );
       //  console.log(response)
-      dispatch(getAllBidsAction(newObj?.productId));
-
+      await dispatch(getAllBidsAction(newObj?.productId));
+      setIsloading(false);
       setShowDrawer(false);
     } catch (error) {
+      setIsloading(false);
+
       console.log(error);
     }
   };
@@ -125,9 +136,14 @@ const Drawer = ({
                           {productName}{" "}
                         </p>
                         <p> Bid Amount : ₹ {bidAmount} </p>
-                        {
-                          isGreaterAmount ? '' : <p className="text-red-600" >Your Bid Amount is Less than highest Bid or Starting Price</p>
-                        }
+                        {isGreaterAmount ? (
+                          ""
+                        ) : (
+                          <p className="text-red-600">
+                            Your Bid Amount is Less than highest Bid or Starting
+                            Price
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="pt-5">
@@ -149,15 +165,20 @@ const Drawer = ({
                       </h1>
                       <div>
                         <input
+                          onChange={(e) =>
+                            (e.target.value = formatCardNumber(e.target.value))
+                          }
                           type="text"
                           name="cardNumber"
+                          maxlength="14"
                           class="block w-full rounded-md border-2 py-1.5 pl-2 pr-2    placeholder:text-gray-400   "
-                          placeholder="Enter Card Number"
+                          placeholder="Enter Card Number "
                         />
                       </div>
                       <div className="flex gap-3 justify-between mt-4">
                         <input
                           type="text"
+                          maxlength="3"
                           name="cvv"
                           class="block w-full rounded-md border-2 py-1.5 pl-2 pr-2    placeholder:text-gray-400   "
                           placeholder="Enter CVV"
@@ -170,15 +191,30 @@ const Drawer = ({
                         />
                       </div>
                     </div>
+                    <div>
+                      {/* {
+                        isAllFilled ? '' : <p>Please Fill All Detail</p>
+                      } */}
+                    </div>
                   </div>
                   <div className="px-2">
-                    <button
-                      onClick={onSubmit}
-                      className={`bg-blue-600 w-full text-white py-2 rounded-2xl ${isGreaterAmount ?  'cursor-pointer':'cursor-not-allowed' }  `}
-                    >
-                      {" "}
-                      Submit
-                    </button>
+                    {!isLoading ? (
+                      <button className="bg-blue-600 w-full flex items-center justify-center gap-2 text-white  rounded-2xl" >
+                        <Svg/> loading
+                      </button>
+                    ) : (
+                      <button
+                        onClick={onSubmit}
+                        className={`bg-blue-600 w-full text-white py-2 rounded-2xl ${
+                          isGreaterAmount
+                            ? "cursor-pointer"
+                            : "cursor-not-allowed"
+                        }  `}
+                      >
+                        {" "}
+                        Submit
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
