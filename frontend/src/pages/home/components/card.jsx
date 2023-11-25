@@ -20,7 +20,7 @@ const Card = ({
   }, [endDate]);
   return (
     <Link to={`/product/${_id}`}>
-      <div className="border rounded-xl hover:translate-y-0 translate-y-2 min-h-[350px] max-h-350px ">
+      <div className="border rounded-xl hover:translate-y-0 translate-y-2 min-h-[360px] max-h-360px ">
         <div className="max-h-[220px] min-h-[220px] w-full overflow-hidden rounded-lg bg-gray-200 ">
           <img
             src={productImage}
@@ -29,9 +29,11 @@ const Card = ({
           />
         </div>
         <h3 className="mt-4 text-[1.2rem] text-gray-700 px-3">{productName}</h3>
-       
-        {purchaseBy ? (
-          <p className="mt-1 text-lg font-medium text-gray-900 px-3 text-red-600">
+
+        {purchaseBy ? purchaseBy == "Expire" ? ( <p className="mt-1 text-lg font-medium bg-gray-100 text-center px-3 text-red-600 ">
+            Auction Ended
+          </p>) :  (
+          <p className="mt-1 text-lg font-medium bg-gray-100 text-center px-3 text-red-600 ">
             Sold
           </p>
         ) : (
@@ -39,7 +41,9 @@ const Card = ({
             {" "}
             <p className="mt-1 text-lg font-medium text-gray-900 px-3">
               Auction End on {endDate}{" "}
-              <span className="text-red-500">{expireTime} days left</span>
+            </p>{" "}
+            <p className="text-red-500 mt-1 px-3 text-lg font-medium">
+              {expireTime} days left {expireTime==0?', auction will End Today' : ''}
             </p>{" "}
           </>
         )}

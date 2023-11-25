@@ -2,9 +2,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllBidsAction } from "../../../redux/bids/bid.action";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Svg from "../../../components/svg";
-
+import { io } from "socket.io-client";
 const Drawer = ({
   showDrawer,
   highestBid,
@@ -18,22 +18,44 @@ const Drawer = ({
   endDate,
   description,
   productImage,
+  getProduct,
+  setBidAmount,
+  setHighestBid
+  
 }) => {
   // const { itemImage, itemName } = item;
+  // const socket = io('http://localhost:8080');
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loginUserDetail, isAuth } = useSelector((store) => store.userReducer);
   const [isGreaterAmount, setIsGreaterAmount] = useState(true);
-  const [isLoading, setIsloading] = useState(true);
-
+  const [isLoading, setIsloading] = useState(false);
+  const [socket, setSocket] = useState(null);
   useEffect(() => {
-    console.log(bidAmount, highestBid, startBid);
+    // console.log(bidAmount, highestBid, startBid);
     if (bidAmount > highestBid && bidAmount > startBid) {
       setIsGreaterAmount(true);
     } else {
       setIsGreaterAmount(false);
     }
   }, [bidAmount]);
+  const { id } = useParams();
+  useEffect(() => {
+    const newSocket = io(`${process.env.REACT_APP_BASE_URL}`);
+    newSocket.on('newBidAdded', (data) => {
+      //  console.log( 'g', data)
+      // getProduct();
+      if (data.bidAmount > highestBid) {
+        setHighestBid(data.bidAmount)
+      }
+
+      dispatch(getAllBidsAction(id))
+   })
+   setSocket(newSocket);
+   // return () => {
+   //   socket.disconnect();
+   // };
+ },[])
   const formatCardNumber = (value) => {
     return value.replace(/\D/g, "").replace(/(\d{4})(?=\d)/g, "$1 ");
   };
@@ -54,16 +76,31 @@ const Drawer = ({
       bidAmount,
       productId: _id,
     };
+    if (!socket) {
+      console.log('socket not initialize')
+      return
+    }
+    socket?.emit('newBid', newObj)
+    // socket.on('newBidAdded', (data) => {
+    //   console.log( 'g', data)
+    // })
+    // socket.on('newBidAdded', (data) => {
+    //   console.log( 'g', data)
+    // })
     try {
       setIsloading(true);
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/bids/add`,
         newObj
       );
-      //  console.log(response)
+      getProduct()
       await dispatch(getAllBidsAction(newObj?.productId));
+
       setIsloading(false);
-      setShowDrawer(false);
+      setTimeout(() => {
+        setShowDrawer(false);
+        setBidAmount('')
+      }, 200);
     } catch (error) {
       setIsloading(false);
 
@@ -198,9 +235,9 @@ const Drawer = ({
                     </div>
                   </div>
                   <div className="px-2">
-                    {!isLoading ? (
-                      <button className="bg-blue-600 w-full flex items-center justify-center gap-2 text-white  rounded-2xl" >
-                        <Svg/> loading
+                    {isLoading ? (
+                      <button className="bg-blue-600 w-full flex items-center justify-center gap-2 text-white  rounded-2xl">
+                        <Svg /> loading
                       </button>
                     ) : (
                       <button

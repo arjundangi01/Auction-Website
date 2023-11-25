@@ -1,8 +1,9 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { onUserSignupAction } from "../../redux/user/user.action";
 import { useDispatch } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
+import Svg from "../../components/svg";
 const Signup = () => {
   const userNameRef = useRef(null);
   const emailRef = useRef(null);
@@ -11,14 +12,21 @@ const Signup = () => {
   const navigate = useNavigate();
   const notifyError = (msg) => toast.error(msg);
   const notifySuccess = (msg) => toast.error(msg);
+  const [isLoading, setIsLoading] = useState(false);
+
   const onSubmit = async (e) => {
     e.preventDefault();
+    if (!emailRef.current?.value || !passwordRef.current?.value ||userNameRef.current?.value) {
+      notifyError('Please Enter All Details')
+      return;
+    }
     const newObj = {
       userName: userNameRef.current?.value,
       email: emailRef.current?.value,
       password: passwordRef.current?.value,
     };
-    await dispatch(onUserSignupAction(newObj, navigate,notifyError,notifySuccess));
+    setIsLoading(true)
+    await dispatch(onUserSignupAction(newObj, navigate,notifyError,notifySuccess,setIsLoading));
   };
 
   return (
@@ -101,13 +109,19 @@ const Signup = () => {
             </div>
 
             <div>
-              <button
+             { isLoading ?   <button
+                  onClick={onSubmit}
+                  // type="submit"
+                  className="flex items-center gap-2 w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  <Svg /> Loading
+                </button>:  <button
                 onClick={onSubmit}
                 // type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Sign Up
-              </button>
+              </button>}
             </div>
           </form>
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BidCard from "./bidCard";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllBidsAction } from "../../../redux/bids/bid.action";
@@ -7,15 +7,24 @@ import { getAllBidsAction } from "../../../redux/bids/bid.action";
 const Bids = ({ _id }) => {
   const dispatch = useDispatch();
   const { allBids } = useSelector((store) => store.bidReducer)
-  console.log(allBids)
-  useEffect(() => {
-    // getBids();
-    dispatch(getAllBidsAction(_id))
-  }, []);
+  // console.log(allBids)
+  // useEffect(() => {
+  //   // getBids();
+  //   dispatch(getAllBidsAction(_id))
+  // }, []);
+  const bidContainerRef = useRef()
   
-
+  // const scrollToBottom = () => {
+  //   if (bidContainerRef.current) {
+  //     bidContainerRef.current.scrollTop =
+  //     bidContainerRef.current.scrollHeight;
+  //   }
+  // };
+  // useEffect(() => {
+  //   scrollToBottom()
+  // },[])
   return (
-    <div className="pr-3" >
+    <div ref={bidContainerRef} className="pr-3 max-h-[240px] min-h-[240px]  overflow-y-scroll" >
       <h1 className="text-[2rem] " >All Bids</h1>
       <div className="mt-2">
         {allBids.map((bid) => (

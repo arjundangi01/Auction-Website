@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
@@ -6,6 +6,8 @@ import { MdDeleteForever } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { onAddNewProduct } from "../../redux/product/product.action";
 import { uploadImage } from "../../config/firebase";
+import Svg from "../../components/svg";
+import { Spinner } from "../../components/loading";
 const Sell = () => {
   const [imageUrl, setImageUrl] = useState("");
   const { isAuth } = useSelector((store) => store.userReducer);
@@ -16,13 +18,20 @@ const Sell = () => {
   const endDateRef = useRef("");
   const descRef = useRef("");
   const [isAllFilled, setIsAllFilled] = useState(true);
-
-  // const navigate = useNavigate();
+  const [isImageUploadLoading, setImageUploadLoading] = useState(false);
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+  useEffect(() => {
+    if (!isAuth) {
+      navigate("/login");
+    }
+  }, []);
   const handleImageChange = (e) => {
+    setImageUploadLoading(true);
     // let image = e.target.files[0];
     uploadImage(e.target.files[0])
       .then((downloadURL) => {
         setImageUrl(downloadURL);
+        setImageUploadLoading(false);
 
         // console.log(downloadURL);
       })
@@ -42,7 +51,7 @@ const Sell = () => {
       !imageUrl
     ) {
       setIsAllFilled(false);
-      
+
       return;
     }
     setIsAllFilled(true);
@@ -54,8 +63,9 @@ const Sell = () => {
       description: descRef.current?.value,
       productImage: imageUrl,
     };
-
-    // dispatch(onAddNewProduct(newObj,navigate));
+    setIsSubmitLoading(true);
+    await dispatch(onAddNewProduct(newObj, navigate));
+    setIsSubmitLoading(false);
   };
   return (
     <main className="w-[70%] m-auto">
@@ -155,9 +165,10 @@ const Sell = () => {
               <div class="col-span-full">
                 <label
                   for="cover-photo"
-                  class="block text-sm font-medium leading-6 "
+                  className=" text-sm font-medium leading-6 flex gap-3 items-center"
                 >
                   Cover photo
+                  {isImageUploadLoading && <Spinner />}
                 </label>
                 <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                   <div class="text-center">
@@ -215,12 +226,18 @@ const Sell = () => {
               <p className="text-red-600">Please Fill All Detail</p>
             )}
             <div className="flex justify-center mt-5">
-              <button
-                onClick={onSubmit}
-                className="bg-blue-600 py-1 px-5  rounded-2xl text-white"
-              >
-                Submit
-              </button>
+              {isSubmitLoading ? (
+                <button className="bg-blue-600 px-5 flex items-center justify-center gap-2 text-white  rounded-2xl">
+                  <Svg /> loading..
+                </button>
+              ) : (
+                <button
+                  onClick={onSubmit}
+                  className="bg-blue-600 py-1 px-5  rounded-2xl text-white"
+                >
+                  Submit
+                </button>
+              )}
             </div>
           </div>
         </div>

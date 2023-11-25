@@ -7,7 +7,7 @@ import {
 } from "./user.action_type";
 import Cookies from "js-cookie";
 
-export const onUserLoginAction = (userObj,navigate,notifyError,notifySuccess) => async (dispatch) => {
+export const onUserLoginAction = (userObj,navigate,notifyError,notifySuccess,setIsLoading) => async (dispatch) => {
   // console.log(userObj);
   try {
     const  {data}  = await axios.post(
@@ -19,6 +19,7 @@ export const onUserLoginAction = (userObj,navigate,notifyError,notifySuccess) =>
       notifyError(data.message)
       return;
     }
+    setIsLoading(false)
     notifySuccess(data.message)
     Cookies.set('auction_token',data.token)
     dispatch({ type: USER_LOGIN_REQUEST_SUCCESS })
