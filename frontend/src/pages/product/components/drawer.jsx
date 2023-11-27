@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllBidsAction } from "../../../redux/bids/bid.action";
+import { GET_ALL_BIDS_SUCCESS, getAllBidsAction } from "../../../redux/bids/bid.action";
 import { useNavigate, useParams } from "react-router-dom";
 import Svg from "../../../components/svg";
 import { io } from "socket.io-client";
@@ -20,7 +20,8 @@ const Drawer = ({
   productImage,
   getProduct,
   setBidAmount,
-  setHighestBid
+  setHighestBid,
+  notify
   
 }) => {
   // const { itemImage, itemName } = item;
@@ -31,6 +32,8 @@ const Drawer = ({
   const [isGreaterAmount, setIsGreaterAmount] = useState(true);
   const [isLoading, setIsloading] = useState(false);
   const [socket, setSocket] = useState(null);
+  const { allBids } = useSelector((store) => store.bidReducer)
+
   useEffect(() => {
     // console.log(bidAmount, highestBid, startBid);
     if (bidAmount > highestBid && bidAmount > startBid) {
@@ -45,11 +48,15 @@ const Drawer = ({
     newSocket.on('newBidAdded', (data) => {
       //  console.log( 'g', data)
       // getProduct();
-      if (data.bidAmount > highestBid) {
+      if (data.bidAmount > highestBid && data.productId==id) {
         setHighestBid(data.bidAmount)
       }
+      if (data.productId == id) {
+        // console.log('all', allBids)
+        // dispatch({type:GET_ALL_BIDS_SUCCESS,payload:{allBids:[...allBids,data]}})
+        dispatch(getAllBidsAction(id))
+      }
 
-      dispatch(getAllBidsAction(id))
    })
    setSocket(newSocket);
    // return () => {
@@ -67,6 +74,7 @@ const Drawer = ({
 
     if (!isAuth) {
       navigate("/login");
+      return;
     }
 
     let newObj = {
@@ -94,6 +102,7 @@ const Drawer = ({
         newObj
       );
       getProduct()
+      notify()
       await dispatch(getAllBidsAction(newObj?.productId));
 
       setIsloading(false);

@@ -20,7 +20,7 @@ const Card = ({
   }, [endDate]);
   return (
     <Link to={`/product/${_id}`}>
-      <div className="border rounded-xl hover:translate-y-0 translate-y-2 min-h-[360px] max-h-360px ">
+      <div className="border rounded-xl hover:translate-y-0 translate-y-2 min-h-[370px] max-h-370px ">
         <div className="max-h-[220px] min-h-[220px] w-full overflow-hidden rounded-lg bg-gray-200 ">
           <img
             src={productImage}

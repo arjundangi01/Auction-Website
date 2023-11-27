@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { onGetAllProducts } from "../../redux/product/product.action";
 import SearchCard from "./components/search_card";
+import Work from "./components/work";
 const Home = () => {
   const dispatch = useDispatch();
   const searchRef = useRef("");
@@ -36,17 +37,19 @@ const Home = () => {
     } catch (error) {}
   };
   const getProduct = async () => {
-  try {
-    const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/products/all/?q=${searchRef.current?.value}`);
-    // console.log(response)
-    setAllSearches(response.data)
-  } catch (error) {
-    console.log(error)
-  }
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/products/all/?q=${searchRef.current?.value}`
+      );
+      // console.log(response)
+      setAllSearches(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <main>
-      <section id="1" className="h-[60vh]">
+      <section id="1" className="h-[60vh] mt-4">
         <div className="flex flex-col items-center  justify-center gap-y-4 w-[50%] m-auto   text-center">
           <h1 className="text-[3.5rem] font-bold text-blue-600">
             Join Exclusive Auction & Get The Finest.
@@ -67,11 +70,9 @@ const Home = () => {
                 search ? "visible" : "hidden"
               }  absolute  left-0 top-[55px] bg-white w-full rounded-xl border py-2`}
             >
-              {
-                allSearches.map((ele) => (
-                  <SearchCard key={ele._id} {...ele} />
-                ))
-             }
+              {allSearches?.map((ele) => (
+                <SearchCard key={ele._id} {...ele} />
+              ))}
             </div>
           </div>
         </div>
@@ -87,12 +88,14 @@ const Home = () => {
             <Card key={item._id} {...item} />
           ))}
         </div>
-        <div className="mt-10">
+        <div className="mt-10 mb-14">
           <div>
             <h1 className="text-[2rem] font-bold text-blue-600">
               How it Works ?
             </h1>
           </div>
+
+          <Work />
         </div>
       </section>
     </main>

@@ -4,7 +4,7 @@ import BidCard from "./bidCard";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllBidsAction } from "../../../redux/bids/bid.action";
 
-const Bids = ({ _id }) => {
+const Bids = ({ _id,purchaseBy,highestBid }) => {
   const dispatch = useDispatch();
   const { allBids } = useSelector((store) => store.bidReducer)
   // console.log(allBids)
@@ -30,7 +30,7 @@ const Bids = ({ _id }) => {
         {allBids.map((bid) => (
        
           
-         <BidCard {...bid} />
+         <BidCard {...bid} purchaseBy={purchaseBy} highestBid={highestBid} />
         ))}
       </div>
     </div>
