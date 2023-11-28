@@ -7,7 +7,7 @@ import { TbCoinRupeeFilled } from "react-icons/tb";
 const Work = () => {
   return (
     <main className="mt-4 mb-2 grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3  xl:grid-cols-4">
-      <div className="px-2">
+      <div className="px-4">
         <div className="flex justify-between items-center">
           <MdAccountCircle className="text-[4rem] text-indigo-400" />
           <FaArrowRight className="text-[1.4rem]" />
@@ -19,7 +19,7 @@ const Work = () => {
           Registration is your passport to a world of thrilling auctions.
         </p>
       </div>
-      <div className="px-2">
+      <div className="px-4">
         <div className="flex justify-between items-center">
           <FaRegMoneyBill1 className="text-[4rem] text-indigo-400" />
           <FaArrowRight className="text-[1.4rem]" />
@@ -31,7 +31,7 @@ const Work = () => {
           interest. Your next prized possession is just a bid away!
         </p>
       </div>
-      <div className="px-2">
+      <div className="px-4">
         <div className="flex justify-between items-center">
           <TbCoinRupeeFilled className="text-[4rem] text-indigo-400" />
           <FaArrowRight className="text-[1.4rem]" />
@@ -44,7 +44,7 @@ const Work = () => {
           secure your winning bid.
         </p>
       </div>
-      <div className="px-2">
+      <div className="px-4">
         <div className="flex justify-between items-center">
           <FaTrophy className="text-[4rem] text-indigo-400" />
         </div>

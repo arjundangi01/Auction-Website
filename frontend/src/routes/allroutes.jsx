@@ -5,11 +5,13 @@ import Product from "../pages/product/product";
 import Sell from "../pages/sell/sell";
 import Login from "../pages/login/login";
 import Signup from "../pages/login/signup";
+import Profile from "../pages/profile/profile";
 
 const AllRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home/>} >  </Route>
+      <Route path="/profile/:id" element={<Profile/>} >  </Route>
       <Route path="/login" element={<Login/>} ></Route>
       <Route path="/signup" element={<Signup/>} ></Route>
       <Route path="/product/:id" element={<Product/>} ></Route>

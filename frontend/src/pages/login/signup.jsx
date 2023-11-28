@@ -16,7 +16,7 @@ const Signup = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!emailRef.current?.value || !passwordRef.current?.value ||userNameRef.current?.value) {
+    if (!emailRef.current?.value || !passwordRef.current?.value ||!userNameRef.current?.value) {
       notifyError('Please Enter All Details')
       return;
     }

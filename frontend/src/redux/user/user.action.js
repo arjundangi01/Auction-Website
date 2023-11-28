@@ -25,6 +25,7 @@ export const onUserLoginAction = (userObj,navigate,notifyError,notifySuccess,set
     dispatch({ type: USER_LOGIN_REQUEST_SUCCESS })
     navigate('/')
   } catch (error) {
+    setIsLoading(false)
     notifyError('server not responding')
     console.log(error);
   }
@@ -35,7 +36,7 @@ export const onUserLogoutAction = () => (dispatch) => {
   dispatch({type:USER_LOGOUT_REQUEST_SUCCESS})
 }
 
-export const onUserSignupAction = (userObj,navigate,notifyError,notifySuccess) => async (dispatch) => {
+export const onUserSignupAction = (userObj,navigate,notifyError,notifySuccess,setIsLoading) => async (dispatch) => {
   // console.log(userObj);
   try {
     const  {data}  = await axios.post(
@@ -48,10 +49,12 @@ export const onUserSignupAction = (userObj,navigate,notifyError,notifySuccess) =
       return;
     }
     notifySuccess(data.message)
-    Cookies.set('auction_token',data.token)
+    Cookies.set('auction_token', data.token)
+    setIsLoading(false)
     dispatch({ type: USER_LOGIN_REQUEST_SUCCESS })
     navigate('/')
   } catch (error) {
+    setIsLoading(false)
     notifyError('server not responding')
     console.log(error);
   }

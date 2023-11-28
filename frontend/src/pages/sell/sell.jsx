@@ -130,6 +130,7 @@ const Sell = () => {
                     <div class="flex rounded-md  focus-within:ring-inset  ">
                       <input
                         ref={endDateRef}
+                        min={new Date().toISOString().split('T')[0]}
                         type="date"
                         name="end_date"
                         autocomplete="date"

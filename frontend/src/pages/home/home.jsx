@@ -54,14 +54,14 @@ const Home = () => {
           <h1 className="text-[3.5rem] font-bold text-blue-600">
             Join Exclusive Auction & Get The Finest.
           </h1>
-          <div className=" relative flex flex-col  h-[3.5rem] w-[70%] px-[1rem] rounded-xl border py-2">
+          <div className=" relative flex flex-col  h-[3.5rem] w-[70%] px-[1rem] rounded-xl border  py-2">
             <div className="flex h-[40px]">
               <input
                 ref={searchRef}
                 onChange={handleChange}
                 type="text"
                 placeholder="search for item"
-                className="outline-none bg-transparent w-[100%] "
+                className="outline-none bg-transparent  w-[100%] "
               />
               <button className="bg-[#90e0ef] rounded-xl px-3  ">Search</button>
             </div>

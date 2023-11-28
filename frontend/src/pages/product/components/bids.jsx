@@ -24,7 +24,7 @@ const Bids = ({ _id,purchaseBy,highestBid }) => {
   //   scrollToBottom()
   // },[])
   return (
-    <div ref={bidContainerRef} className="pr-3 max-h-[240px] min-h-[240px]  overflow-y-scroll" >
+    <div ref={bidContainerRef} className="pr-3 " >
       <h1 className="text-[2rem] " >All Bids</h1>
       <div className="mt-2">
         {allBids.map((bid) => (
