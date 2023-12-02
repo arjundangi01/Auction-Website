@@ -18,6 +18,7 @@ const Card = ({
     console.log(endDate);
     setExpireTime(calculateTimeRemaining(endDate) + 1);
   }, [endDate]);
+  // --
   return (
     <Link to={`/product/${_id}`}>
       <div className="border rounded-xl hover:translate-y-0 translate-y-2 min-h-[370px] max-h-370px ">
