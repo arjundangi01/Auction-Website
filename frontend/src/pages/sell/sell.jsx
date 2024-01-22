@@ -64,8 +64,8 @@ const Sell = () => {
       productImage: imageUrl,
     };
     setIsSubmitLoading(true);
-    await dispatch(onAddNewProduct(newObj, navigate));
-    setIsSubmitLoading(false);
+    await dispatch(onAddNewProduct(newObj, navigate,setIsSubmitLoading));
+    // setIsSubmitLoading(false);
   };
   return (
     <main className="w-[70%] m-auto">
@@ -228,13 +228,20 @@ const Sell = () => {
             )}
             <div className="flex justify-center mt-5">
               {isSubmitLoading ? (
-                <button className="bg-blue-600 px-5 flex items-center justify-center gap-2 text-white  rounded-2xl">
+                <button className="px-5 min-w-[30%]   flex items-center justify-center gap-2 text-white  rounded-2xl
+                py-1.5 text-sm font-semibold leading-6 bg-indigo-600  shadow-sm
+                    hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600
+                ">
                   <Svg /> loading..
                 </button>
               ) : (
                 <button
                   onClick={onSubmit}
-                  className="bg-blue-600 py-1 px-5  rounded-2xl text-white"
+                    className="  px-5 min-w-[30%] rounded-2xl text-white 
+                    py-1.5 text-sm font-semibold leading-6 bg-indigo-600  shadow-sm
+                    hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600
+                  
+                  "
                 >
                   Submit
                 </button>

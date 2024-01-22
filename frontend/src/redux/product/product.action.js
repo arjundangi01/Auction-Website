@@ -4,39 +4,50 @@ import { getAllBidsAction } from "../bids/bid.action";
 
 export const GET_ALL_PRODUCT_SUCCESS = "GET_ALL_PRODUCT_SUCCESS";
 
-export const onGetAllProducts = () => async (dispatch) => {
+export const onGetAllProducts = (setLoading) => async (dispatch) => {
   try {
     const response = await axios.get(
       `${process.env.REACT_APP_BASE_URL}/products/all`
     );
-    // console.log(response)
+    setLoading(false);
+    console.log( "response", response)
     dispatch({ type: GET_ALL_PRODUCT_SUCCESS, payload: response.data });
   } catch (error) {
-    console.log(error);
-  }
-};
-export const onAddNewProduct = (newObj,navigate) => async (dispatch) => {
-  const userToken = Cookies.get("auction_token");
-  if (!userToken) {
-    return;
-  }
+    setLoading(true);
+    setTimeout(() => {
+      onGetAllProducts();
+    }, [1000]);
 
-  try {
-    const response = await axios.post(
-      `${process.env.REACT_APP_BASE_URL}/products/add`,
-      newObj,
-      {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      }
-    );
-    navigate('/')
-    // console.log(response);
-  } catch (error) {
     console.log(error);
   }
 };
+export const onAddNewProduct =
+  (newObj, navigate, setIsSubmitLoading) => async (dispatch) => {
+    const userToken = Cookies.get("auction_token");
+    if (!userToken) {
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/products/add`,
+        newObj,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+      navigate("/");
+      setIsSubmitLoading(false);
+
+      // console.log(response);
+    } catch (error) {
+      setIsSubmitLoading(false);
+
+      console.log(error);
+    }
+  };
 export const onAddNewBid = (newObj) => async (dispatch) => {
   const userToken = Cookies.get("auction_token");
   if (!userToken) {

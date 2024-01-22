@@ -245,17 +245,25 @@ const Drawer = ({
                   </div>
                   <div className="px-2">
                     {isLoading ? (
-                      <button className="bg-blue-600 w-full flex items-center justify-center gap-2 text-white  rounded-2xl">
+                      <button className=" w-full flex items-center justify-center gap-2 text-white  rounded-2xl
+                       py-1.5 text-sm font-semibold leading-6 bg-indigo-600  shadow-sm
+                    hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600
+                      
+                      ">
                         <Svg /> loading
                       </button>
                     ) : (
                       <button
                         onClick={onSubmit}
-                        className={`bg-blue-600 w-full text-white py-2 rounded-2xl ${
+                        className={` w-full text-white  rounded-2xl ${
                           isGreaterAmount
                             ? "cursor-pointer"
                             : "cursor-not-allowed"
-                        }  `}
+                          } 
+                          py-1.5 text-sm font-semibold leading-6 bg-indigo-600  shadow-sm
+                    hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600
+                        
+                         `}
                       >
                         {" "}
                         Submit

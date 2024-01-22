@@ -143,7 +143,10 @@ const Product = () => {
                     />
                     <button
                       onClick={() => setShowDrawer(!showDrawer)}
-                      className="bg-blue-600 text-white px-5 py-2 rounded-lg "
+                          className=" text-white px-5 py-2 rounded-lg 
+                           text-sm font-semibold leading-6 bg-indigo-600  shadow-sm
+                    hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600
+                      "
                     >
                       Bid Now
                     </button>

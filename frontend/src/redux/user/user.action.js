@@ -17,6 +17,7 @@ export const onUserLoginAction = (userObj,navigate,notifyError,notifySuccess,set
     // console.log(data)
     if (data.message == "User not registered" || data.message=='Entered wrong details' || data.message == "Internal Error") {
       notifyError(data.message)
+      setIsLoading(false)
       return;
     }
     setIsLoading(false)
@@ -46,6 +47,7 @@ export const onUserSignupAction = (userObj,navigate,notifyError,notifySuccess,se
     // console.log(data)
     if (data.message == "User already registered" || data.message == "Internal Error") {
       notifyError(data.message)
+      setIsLoading(false)
       return;
     }
     notifySuccess(data.message)
